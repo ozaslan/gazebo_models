@@ -1,0 +1,177 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <model name="velodyne_puck">
+    <link name="base">
+      <pose>0 0 0.000 0 0 0</pose>
+      <!-- *** INERTIA PARAMETERS ********************************************** -->
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.000030623</ixx>
+          <iyy>0.000030623</iyy>
+          <izz>0.000091036</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <!-- *** COLLISION DEFINITION ******************************************** -->
+      <collision name="base_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.05165</radius>
+            <length>0.0188</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <!-- *** VISUAL DEFINITION *********************************************** -->
+      <visual name="base_visual">
+        <pose>0 0 -0.0094 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://velodyne_puck/meshes/VLP16_base.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <!-- Give the base link a unique name -->
+    <link name="scan">
+      <pose>0 0 0.028 0 0 0</pose>
+      <!-- *** INERTIA PARAMETERS ********************************************** -->
+      <inertial>
+        <mass>0.790</mass>
+        <inertia>
+          <ixx>0.000090623</ixx>
+          <iyy>0.000090623</iyy>
+          <izz>0.000091036</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <!-- *** COLLISION DEFINITION ******************************************** -->
+      <collision name="scan_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.05165</radius>
+            <length>0.0392</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <!-- *** VISUAL DEFINITION *********************************************** -->
+      <visual name="scan_visual">
+        <!-- Lower the mesh by half the height, and rotate by 90 degrees -->
+        <pose>0 0 -0.037 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://velodyne_puck/meshes/VLP16_scan.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <!-- Add a ray sensor, and give it a name -->
+      <sensor type="ray" name="velodyne_puck">
+        <pose>0 0 -0.004645 0 0 0</pose>
+        <visualize>true</visualize>
+        <update_rate>20</update_rate>
+        <ray>
+          <!-- set the variance to 0 since the plugin postprocesses the data to add noise -->
+          <noise>
+            <type>gaussian</type>
+            <mean>0.0</mean>
+            <stddev>0.000</stddev>
+          </noise>
+          <scan>
+            <vertical>
+              <samples>16</samples>
+              <resolution>1</resolution>
+              <min_angle>-0.26179938779</min_angle>
+              <max_angle>0.26179938779</max_angle>
+            </vertical>
+            <horizontal>
+              <!-- NOTE : Gazebo will quit if the number of samples is too much. 
+                   Reduce this value or the resolution -->
+              <samples>900</samples>
+              <resolution>0.10</resolution>
+              <min_angle>0</min_angle>
+              <max_angle>6.2831853071</max_angle>
+            </horizontal>
+          </scan>
+          <range>
+            <min>0.10</min>
+            <max>100</max>
+            <resolution>0.02</resolution>
+          </range>
+        </ray>
+        <!-- The plugin declarion should be inside the sensor tag for proper driver behavior -->
+        <plugin name="gazebo_ros_velodyne_puck_controller" filename="libgazebo_ros_block_laser.so">
+          <topicName>/velodyne_puck/scan</topicName>
+          <frameName>velodyne_puck</frameName>
+          <updateRate>20</updateRate>
+          <alwaysOn>true</alwaysOn>
+          <gaussianNoise>0.0009</gaussianNoise>
+        </plugin>
+      </sensor>
+    </link>
+    <link name="top">
+      <pose>0 0 0.056 0 0 0</pose>
+      <!-- *** INERTIA PARAMETERS ********************************************** -->
+      <inertial>
+        <mass>0.1</mass>
+        <inertia>
+          <ixx>0.000030623</ixx>
+          <iyy>0.000030623</iyy>
+          <izz>0.000091036</izz>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyz>0</iyz>
+        </inertia>
+      </inertial>
+      <!-- *** COLLISION DEFINITION ******************************************** -->
+      <collision name="top_collision">
+        <geometry>
+          <cylinder>
+            <radius>0.05165</radius>
+            <length>0.0147</length>
+          </cylinder>
+        </geometry>
+      </collision>
+      <!-- *** VISUAL DEFINITION *********************************************** -->
+      <visual name="top_visual">
+        <!-- Lower the mesh by half the height, and rotate by 90 degrees -->
+        <pose>0 0 -0.065 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://velodyne_puck/meshes/VLP16_top.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <!-- Joint is not functional with the current plugins. 
+         It can be used for rotating the head for nicer visualization -->
+    <joint type="fixed" name="fixed01">
+      <pose>0 0 0.0188 0 0 0</pose>
+      <parent>base</parent>
+      <child>scan</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-10000000000000000</lower>
+          <upper>+10000000000000000</upper>
+        </limit>
+      </axis>
+    </joint>
+    <joint type="fixed" name="fixed02">
+      <pose>0 0 0.0392 0 0 0</pose>
+      <parent>scan</parent>
+      <child>top</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-10000000000000000</lower>
+          <upper>+10000000000000000</upper>
+        </limit>
+      </axis>
+    </joint>
+
+  </model>
+</sdf>

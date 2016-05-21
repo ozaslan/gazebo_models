@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package>
+  <name>velodyne_puck</name>
+  <version>1.0.0</version>
+  <description>
+    Models and plugins for Velodyne Puck range sensor
+  </description>
+
+  <license>BSD</license>
+  <author>Tolga Ozaslan</author>
+  <maintainer email="ozaslan@seas.upenn.edu">Tolga Ozaslan</maintainer>
+
+</package>
