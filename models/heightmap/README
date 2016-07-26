@@ -1,0 +1,1 @@
+Gazebo <=7 cannot load height maps from the user Gzclient Models Widget. The current only way to include heithmaps is to load from inside a world file. 'heightmap.world' under the '../worlds' directory can be used for this purpose.
