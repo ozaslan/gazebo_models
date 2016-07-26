@@ -4,6 +4,12 @@
   <arg name="enable_logging" default="false" />
   <arg name="enable_ground_truth" default="true" />
   <arg name="log_file" default="$(arg mav_name)" />
+  <arg name="robot_x" default="-7.5" />
+  <arg name="robot_y" default="20.4" />
+  <arg name="robot_z" default="0.65" />
+  <arg name="robot_R" default="0" />
+  <arg name="robot_P" default="0" />
+  <arg name="robot_Y" default="3.14" />
 
   <env name="GAZEBO_MODEL_PATH" value="$(find rotors_gazebo)/models:$(find gazebo_models)/models"/>
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -21,10 +27,14 @@
       <arg name="enable_logging" value="$(arg enable_logging)" />
       <arg name="enable_ground_truth" value="$(arg enable_ground_truth)" />
       <arg name="log_file" value="$(arg log_file)"/>
+      <arg name="x" value="$(arg robot_x)" />
+      <arg name="y" value="$(arg robot_y)" />
+      <arg name="z" value="$(arg robot_z)" />
+      <arg name="Y" value="$(arg robot_Y)" />
     </include>
     <node name="joy_node" pkg="joy" type="joy_node" />
     <node name="velocity_control_with_joy" pkg="rotors_gazebo" type="velocity_control_with_joy" output="screen" >
-      <rosparam command="load" file="$(find rotors_gazebo)/resource/logitech_f710.yaml" />
+      <rosparam command="load" file="$(find rotors_gazebo)/resource/xbox360.yaml" />
       <!--<remap from="~odom" to="odometry_sensor1/odometry" />-->
       <remap from="~odom" to="ground_truth/odometry" />
       <remap from="~joy"  to="joy" />
